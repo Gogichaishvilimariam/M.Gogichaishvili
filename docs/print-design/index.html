@@ -183,5 +183,5 @@
 	<!-- Start of bodyEnd -->
     
     <!-- End of bodyEnd -->
-</body>
+<script>document.querySelectorAll('section ul').forEach(track=>{const section=track.closest('section');section.style.position='relative';const controls=document.createElement('div');controls.style.cssText='position:absolute;bottom:12px;right:12px;display:flex;gap:6px;z-index:10';[['←',-1,'Previous images'],['→',1,'Next images']].forEach(([label,direction,title])=>{const b=document.createElement('button');b.textContent=label;b.setAttribute('aria-label',title);b.style.cssText='width:40px;height:36px;border:1px solid #aaa;border-radius:4px;background:#111;color:white;font-size:20px;cursor:pointer';b.onclick=()=>track.scrollBy({left:direction*track.clientWidth*.8,behavior:'smooth'});controls.append(b)});section.append(controls)});</script></body>
 </html>
