@@ -19,7 +19,7 @@ The original Bebas Neue / Inter type pairing and neutral palette are retained. E
 
 ## Content
 
-All original project images are retained. Duplicate placeholder descriptions have been removed. No new business results or experience figures have been invented. Testimonials are retained from the original portfolio. The old empty /vodka route leads to the Gurian Vodka project.
+All original project images are retained. The extra category-preview collection was removed at the owner’s request; the About portrait was replaced with the owner’s supplied photo. Software logos are stored locally under docs/assets/tool-logos. Duplicate placeholder descriptions have been removed. No new business results or experience figures have been invented. Testimonials are retained from the original portfolio. The old empty /vodka route leads to the Gurian Vodka project.
 
 ## Asset recovery
 
