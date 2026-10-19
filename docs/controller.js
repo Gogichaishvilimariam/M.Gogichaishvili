@@ -2,14 +2,16 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
   document.querySelectorAll('.controller-board').forEach(board => {
-    const reset = () => { board.style.removeProperty('--rx'); board.style.removeProperty('--ry'); };
+    const reset = () => { board.style.removeProperty('--rx'); board.style.removeProperty('--ry'); board.style.removeProperty('--lx'); board.style.removeProperty('--ly'); };
     board.addEventListener('pointermove', event => {
       if (reduced.matches || !fine.matches || event.pointerType === 'touch') return;
       const box = board.getBoundingClientRect();
       const x = Math.max(-.5, Math.min(.5, (event.clientX - box.left) / box.width - .5));
       const y = Math.max(-.5, Math.min(.5, (event.clientY - box.top) / box.height - .5));
-      board.style.setProperty('--rx', `${-y * 12}deg`);
-      board.style.setProperty('--ry', `${x * 12}deg`);
+      board.style.setProperty('--rx', `${9 - y * 7}deg`);
+      board.style.setProperty('--ry', `${-8 + x * 7}deg`);
+      board.style.setProperty('--lx', `${(x + .5) * 100}%`);
+      board.style.setProperty('--ly', `${(y + .5) * 100}%`);
     });
     board.addEventListener('pointerleave', reset);
     reduced.addEventListener('change', reset);
