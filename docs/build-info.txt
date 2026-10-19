@@ -1,2 +1,3 @@
 Static portfolio deployment
 2026-10-19
+Design system version 2: shared typography, neutral colors, spacing, accessible galleries and self-hosted video.
