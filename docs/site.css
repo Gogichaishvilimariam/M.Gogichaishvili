@@ -8,3 +8,6 @@
 /* Software marks share one optical size and alignment. */
 .tool-list li{display:flex;align-items:center;gap:16px;min-height:64px}.tool-list .tool-logo{width:40px;height:40px;flex:0 0 40px;object-fit:contain}.about-layout>figure:has(img[src$="mariam-portrait.png"]){background:#0c1013}
 @media(max-width:767px){.tool-list li{min-height:64px}.tool-list .tool-logo{width:36px;height:36px;flex-basis:36px}}
+
+/* Editorial feature on the About page. */
+.press-feature{margin-top:40px;padding-top:32px;border-top:1px solid var(--line)}.prose .press-feature .eyebrow{font-size:14px;line-height:21px;margin-bottom:12px}.press-feature h3{margin-bottom:12px}.prose .press-feature p:not(.eyebrow){font-size:16px;line-height:25px;margin-bottom:16px}.press-feature .supporting{display:block;margin-top:8px}
