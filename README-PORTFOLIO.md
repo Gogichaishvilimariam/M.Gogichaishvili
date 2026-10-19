@@ -1,20 +1,30 @@
-# Mariam Gogichaishvili portfolio
+# Mariam Gogichaishvili — portfolio
 
-Static portfolio migrated from designing.framer.website on 2026-10-19.
+A static portfolio hosted for free by GitHub Pages. Source: main. Publishing directory: /docs.
 
-## First import
-Open Actions → Import portfolio content. The workflow restores pages and saves all 192 image/font files in docs/assets. It runs automatically on the first push, or manually with Run workflow. Wait for the green check before enabling Pages. No paid service is used.
+https://gogichaishvilimariam.github.io/M.Gogichaishvili/
 
-## Publish for free
-Open repository Settings → Pages. Under Build and deployment, select Deploy from a branch, branch main, folder /docs, then Save.
+## Design and editing
 
-Expected URL: https://gogichaishvilimariam.github.io/M.Gogichaishvili/
+- Shared styles and design tokens: docs/site.css.
+- Shared interactions: docs/site.js.
+- Project copy and image lists: content/portfolio.json.
+- Page generator: scripts/build_portfolio.py (Python standard library only).
+- Regenerate HTML after copy changes: python scripts/build_portfolio.py.
+- Images, fonts and video: docs/assets.
 
-No Framer account, build service, paid package, API key, or npm install is required. Images and fonts are included in docs/assets. Existing custom video embeds keep their original sources.
+Keep generated HTML committed: Pages serves it directly without a build service.
 
-## Editing
-Each page is docs/<page>/index.html. The home page is docs/index.html. CSS is inside the HTML to preserve the original layout. The original Framer editor and animation runtime are not used. Navigation uses standard HTML links.
+The original Bebas Neue / Inter type pairing and neutral palette are retained. Every page uses the same heading scale, spacing, navigation, image viewer and contact area. Essential mobile text is at least 14px, body text is 16px; page titles are 32px and the hero title is 36px. Motion respects the reduced-motion setting and never blocks content without JavaScript.
 
-The source /vodka page was empty, so /vodka redirects to the existing Print Design case study. Original page copy and assets are retained.
+## Content
 
-Verify responsive layouts and custom video embeds before removing the original Framer site.
+All original project images are retained. Duplicate placeholder descriptions have been removed. No new business results or experience figures have been invented. Testimonials are retained from the original portfolio. The old empty /vodka route leads to the Gurian Vodka project.
+
+## Asset recovery
+
+The Import portfolio content workflow restores missing images, fonts and video using migration/assets.json. Existing assets and page edits are preserved. It no longer overwrites HTML. The original migration archive is retained only as a historical backup.
+
+## Verification
+
+Checks cover internal routes and fragment links, local images/fonts, heading structure, image dimensions, preservation of original images, JavaScript syntax, shared CSS asset references and gallery behavior. Browser visual QA was unavailable in this environment. Review desktop/mobile layouts on the published site before relying on exact visual parity.

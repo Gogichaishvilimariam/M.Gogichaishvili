@@ -1,0 +1,82 @@
+"""Build all static pages from content/portfolio.json. Python standard library only."""
+import json,re,html as H
+from pathlib import Path
+from urllib.parse import quote
+ROOT=Path(__file__).resolve().parents[1];DOCS=ROOT/'docs';DATA=json.loads((ROOT/'content/portfolio.json').read_text())
+CATS={'logos':('Logo design','Concept-driven identities, crafted with clarity and precision.'),'social-media':('Social media','Digital visuals for brands, products and campaigns.'),'print-design':('Print design','Brand materials made to be held, read and remembered.'),'bannerposter':('Posters & banners','Bold compositions, expressive type and visual stories.')}
+SPECS={'Weinachy':'Wine e-commerce','Yoonico':'NFT marketplace','Agora':'Music festival','Nami8':'Water-inspired identity','Gurian Vodka':'Family vodka from Guria','Growlab':'Plant care','IKG':'Water filters','Font design':'Georgian typography','The Immortal Legacy':'Georgian cultural heritage'}
+def e(s):return H.escape(s,quote=True)
+def slug(s):return re.sub('[^a-z0-9]+','-',s.lower()).strip('-')
+def link(route,prefix):return prefix+('index.html' if not route else route+'/')
+def image(src,alt,prefix,lazy=True,cls=''):
+ from struct import unpack
+ # Sizes are read from inventory captured during import; keep the build dependency free.
+ size=SIZES.get(src,[1200,900]);loading='lazy' if lazy else 'eager';priority='' if lazy else ' fetchpriority="high"'
+ return f'<img class="{cls}" src="{prefix}{e(src)}" alt="{e(alt)}" width="{size[0]}" height="{size[1]}" loading="{loading}" decoding="async"{priority}>'
+SIZES=json.loads((ROOT/'content/image-sizes.json').read_text())
+def footer(prefix,contact=False):
+ cta='' if contact else f'<section class="contact-cta section" aria-labelledby="cta-title"><p class="eyebrow">Have a project in mind?</p><h2 id="cta-title">Let’s work together.</h2><a class="button" href="{link("contact",prefix)}">Get in touch <span aria-hidden="true">↗</span></a></section>'
+ return cta+f'<footer class="site-footer"><a href="{link("",prefix)}">Mariam Gogichaishvili</a><div><a href="https://www.behance.net/gogichaishvili" target="_blank" rel="noopener noreferrer">Behance ↗</a><a href="https://www.instagram.com/candy_flyn/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://www.linkedin.com/in/gogichaishvili/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#top">Back to top ↑</a></div></footer>'
+def shell(route,title,description,body):
+ prefix='../' if route else './';iswork=route in CATS
+ def navitem(text,target):
+  active=route==target if target!='#work' else iswork
+  href=link('',prefix)+'#work' if target=='#work' else link(target,prefix)
+  return f'<a href="{href}"'+(' aria-current="page"' if active else '')+f'>{text}</a>'
+ nav=''.join(navitem(t,r) for t,r in [('Home',''),('Work','#work'),('About','about'),('Contact','contact')])
+ catnav='' if not iswork else '<nav class="category-nav" aria-label="Work categories">'+''.join(f'<a href="{link(k,prefix)}"'+(' aria-current="page"' if k==route else '')+f'>{e(v[0])}</a>' for k,v in CATS.items())+'</nav>'
+ url='https://gogichaishvilimariam.github.io/M.Gogichaishvili/'+(route+'/' if route else '')
+ out=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>{e(title)} — Mariam Gogichaishvili</title><meta name="description" content="{e(description)}"><meta property="og:title" content="{e(title)} — Mariam Gogichaishvili"><meta property="og:description" content="{e(description)}"><meta property="og:type" content="website"><meta property="og:url" content="{url}"><link rel="canonical" href="{url}"><link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="{prefix}site.css?v=2"><script src="{prefix}site.js?v=2" defer></script></head><body id="top"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="wordmark" href="{link('',prefix)}" aria-label="Mariam Gogichaishvili — home">Mariam G<span aria-hidden="true">.</span></a><nav aria-label="Main navigation">{nav}</nav></header>{catnav}<main id="main">{body}</main>{footer(prefix,route=='contact')}<dialog class="lightbox" aria-label="Image viewer"><div class="lightbox-bar"><span class="lightbox-count" aria-live="polite"></span><button type="button" data-close aria-label="Close image viewer">Close ×</button></div><div class="lightbox-stage"><button type="button" data-prev aria-label="Previous image">←</button><img alt=""><button type="button" data-next aria-label="Next image">→</button></div><p class="lightbox-caption"></p></dialog></body></html>'''
+ path=DOCS/(route+'/index.html' if route else 'index.html');path.parent.mkdir(parents=True,exist_ok=True);path.write_text(out)
+def intro(title,description,eyebrow='Selected work'):
+ return f'<section class="page-intro section"><p class="eyebrow">{e(eyebrow)}</p><h1>{e(title)}</h1><p class="lead">{e(description)}</p></section>'
+# Category pages: one shared project template; every original project image is retained.
+for cat,(title,desc) in CATS.items():
+ prefix='../';projects=DATA[cat];body=intro(title,desc)
+ body+='<nav class="project-index" aria-label="Projects on this page">'+''.join(f'<a href="#{slug(p["title"])}">{e(p["title"])} <span aria-hidden="true">↓</span></a>' for p in projects)+'</nav>'
+ for index,p in enumerate(projects):
+  name=p['title'];paras=[]
+  for text in p['paragraphs']:
+   if len(text)<110 or text.startswith(('I create concept-driven logos','Over the course of my career')):continue
+   if text in paras:continue
+   text=text.replace('Weinarchy','Weinachy').replace('story.My','story. My').replace('alphabet.Each','alphabet. Each').replace('stories.The','stories. The')
+   if text.startswith('ommissioned'):text='C'+text
+   # Mobile variants contain an abbreviated duplicate of the same paragraph.
+   if any(text.startswith(old) or old.startswith(text) for old in paras):
+    paras=[old for old in paras if not text.startswith(old)]
+    if any(old.startswith(text) for old in paras):continue
+   paras.append(text)
+  if cat=='social-media':paras=[f'Selected social media visuals for {name}, '+{'Weinachy':'a wine e-commerce shop.','Yoonico':'an NFT marketplace.','Growlab':'a plant care brand.','IKG':'a water filter company.'}[name]]
+  if cat=='logos' and name=='Nami8':name='Nami 8'
+  body+=f'<article class="project section" id="{slug(p["title"])}"><header class="project-header"><div><p class="eyebrow">{index+1:02d} / {e(SPECS[p["title"]])}</p><h2>{e(name)}</h2></div><p class="project-type">{e(title)}</p></header><div class="project-copy">'+''.join(f'<p>{e(x)}</p>' for x in paras)+'</div>'
+  body+=f'<div class="gallery" role="group" aria-label="{e(name)} project gallery">'
+  for i,src in enumerate(p['images']):
+   caption=f'{name} — {title.lower()}, {i+1} of {len(p["images"])}'
+   body+=f'<figure><a class="gallery-open" href="{prefix}{src}" data-gallery="{cat}-{slug(name)}" aria-label="Enlarge {e(caption)}">{image(src,caption,prefix)}<span class="image-hint" aria-hidden="true">View ↗</span></a><figcaption>{i+1:02d} / {len(p["images"]):02d}</figcaption></figure>'
+  body+='</div></article>'
+ nxt=list(CATS)[(list(CATS).index(cat)+1)%len(CATS)];body+=f'<nav class="next-category section" aria-label="Next category"><p class="eyebrow">Explore more work</p><a href="{link(nxt,prefix)}">{e(CATS[nxt][0])} <span aria-hidden="true">→</span></a></nav>'
+ shell(cat,title,desc,body)
+# Home.
+p='./';body='<section class="hero section"><p class="eyebrow">Mariam Gogichaishvili · Portfolio</p><h1>Graphic<br>Designer<span class="hero-dot" aria-hidden="true">.</span></h1><div class="hero-bottom"><p class="lead">Brand identities, print and digital design.<br>Ideas made clear through form, type and detail.</p><a class="text-link" href="#work">Explore my work ↓</a></div></section>'
+body+='<section class="section" id="work"><div class="section-heading"><p class="eyebrow">Selected work</p><h2>Designed with intention.</h2></div><div class="work-grid">'
+for i,(cat,(title,desc)) in enumerate(CATS.items()):
+ src=DATA[cat][0]['images'][0]
+ body+=f'<a class="work-card" href="{link(cat,p)}"><div class="work-cover">{image(src,title+" — selected work",p,lazy=True)}</div><div class="work-card-title"><h3>{e(title)}</h3><span aria-hidden="true">↗</span></div><p>{e(desc)}</p></a>'
+body+='</div><details class="category-previews"><summary>Browse the collections</summary><div>'+''.join(f'<a href="{link(cat,p)}">{image(DATA["home"]["images"][i],CATS[cat][0]+" collection preview",p)}</a>' for i,cat in enumerate(['logos','social-media','print-design','bannerposter']))+'</div></details></section>'
+body+='<section class="section tools-section"><div><p class="eyebrow">Tools & practice</p><h2>From idea to final detail.</h2></div><ul class="tool-list">'+''.join(f'<li>{t}</li>' for t in ['Adobe Photoshop','Adobe Illustrator','Adobe After Effects','Adobe InDesign','Adobe Dimension','Procreate'])+'</ul></section>'
+quotes=[('Arkadi Berikashvili','@coderiot','Mariam quickly took over my task; she understood my requirements swiftly and clearly. She provided an excellent operational result sooner than the deadline. RECOMMENDED!'),('Tinatin Burduladze','@t.wineCO','Mariam demonstrated strong motivation and delivered her task with a high level of quality and attention to detail. I truly appreciate her dedication and professionalism.'),('Little Paper Boutique','@Maple Treehouse',"Mariam delivered excellent work with precision and creativity. Her attention to detail and thoughtful approach truly elevated the outcome.")]
+body+='<section class="section"><div class="section-heading"><p class="eyebrow">Client feedback</p><h2>A few words from clients.</h2></div><div class="feedback-grid">'
+for i,(name,handle,quote) in enumerate(quotes):body+=f'<figure class="feedback"><blockquote><p>“{e(quote)}”</p></blockquote><figcaption>{image(DATA["home"]["images"][4+i],name,p)}<span><strong>{e(name)}</strong><span>{e(handle)}</span></span></figcaption></figure>'
+body+='</div></section>'
+body+='<section class="section"><div class="section-heading"><p class="eyebrow">Project focus</p><h2>A closer look.</h2></div><div class="case-grid">'+f'<a class="case-card" href="{link("logos",p)}#yoonico">{image(DATA["logos"][1]["images"][1],"Yoonico brand identity",p)}<h3>Yoonico <span aria-hidden="true">↗</span></h3><p>Brand identity · 2021</p></a><a class="case-card" href="{link("print-design",p)}#gurian-vodka">{image(DATA["print-design"][0]["images"][0],"Gurian Vodka label design",p)}<h3>Gurian Vodka <span aria-hidden="true">↗</span></h3><p>Label design · 2020</p></a></div><details class="motion-study"><summary>View motion study</summary><video controls playsinline preload="none" poster="'+p+DATA['home']['images'][7]+'"><source src="'+p+'assets/yoonico-motion.mp4" type="video/mp4">Your browser does not support this video.</video><p class="supporting">Use the player controls to play or pause the animation.</p></details></section>'
+shell('','Graphic designer','Mariam Gogichaishvili — graphic designer working across brand identity, print and digital design.',body)
+# About.
+p='../';paras=DATA['about']['paragraphs'];story=next(x for x in paras if x.startswith('I’m Mariam'));practice=next(x for x in paras if x.startswith('Currently,'))
+body=intro('Mariam Gogichaishvili','A graphic designer with a passion for creating something out of nothing.','About')+f'<section class="about-layout section"><figure>{image(DATA["about"]["images"][0],"Mariam Gogichaishvili",p,False)}</figure><div class="prose"><h2>How it started.</h2><p>{e(story)}</p><h2>Design & I</h2><p>{e(practice)}</p><a class="text-link" href="{link("",p)}#work">Explore my work ↗</a></div></section>'
+shell('about','About','Meet Mariam Gogichaishvili, graphic designer working in branding, print, motion and digital design.',body)
+# Contact.
+body=intro('Let’s work together.','Tell me about your project, the materials you need and your timeline.','Contact')+'<section class="contact-layout section"><div><h2>Email</h2><a class="email-link" href="mailto:gogichaishvili.design@gmail.com">gogichaishvili.design@gmail.com <span aria-hidden="true">↗</span></a><button class="copy-email text-link" type="button" hidden>Copy email address</button><p class="supporting" data-copy-status role="status"></p></div><div><h2>Find me online</h2><ul class="social-list">'+''.join(f'<li><a href="{url}" target="_blank" rel="noopener noreferrer">{name} <span aria-hidden="true">↗</span></a></li>' for name,url in [('Behance','https://www.behance.net/gogichaishvili'),('Instagram','https://www.instagram.com/candy_flyn/'),('LinkedIn','https://www.linkedin.com/in/gogichaishvili/')])+'</ul></div></section>'
+shell('contact','Contact','Contact Mariam Gogichaishvili for brand identity, print and digital design projects.',body)
+(DOCS/'vodka/index.html').write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Gurian Vodka — Mariam Gogichaishvili</title><meta http-equiv="refresh" content="0;url=../print-design/#gurian-vodka"></head><body><a href="../print-design/#gurian-vodka">View Gurian Vodka</a></body></html>')
+(DOCS/'404.html').write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found</title></head><body style="font-family:Arial,sans-serif;padding:10vw;background:#f5f5f0;color:#141414"><h1>Page not found.</h1><p>The page may have moved.</p><a href="/M.Gogichaishvili/">Back to the portfolio →</a></body></html>')
+print('Built 8 routes and a 404 page.')
