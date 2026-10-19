@@ -19,3 +19,14 @@ button.controller-key{padding:0;border:0;background:transparent;font:inherit}.co
 .controller-stage--hero:before{background:radial-gradient(ellipse,#000e 0%,#0008 40%,transparent 72%);filter:blur(14px)}
 .controller-board,.controller-stage--hero .controller-board{filter:drop-shadow(0 3px 2px #0009) drop-shadow(7px 15px 7px #0006) drop-shadow(14px 34px 20px #0006)}
 @media(max-width:767px){.controller-stage--hero{width:min(100%,420px);padding-top:24px;padding-bottom:32px}.controller-board,.controller-stage--hero .controller-board{filter:drop-shadow(0 2px 1px #0009) drop-shadow(4px 9px 5px #0006) drop-shadow(8px 20px 12px #0006)}}
+
+
+@media(max-width:767px){
+ .hero--controller{padding-top:28px;padding-bottom:28px;min-height:0}
+ .hero-layout{gap:0}
+ .controller-stage--hero{width:min(100%,300px);padding-top:20px;padding-bottom:24px}
+ .controller-section .controller-stage{width:min(100%,280px);padding-block:12px}
+ .controller-stage{animation:none}
+ .controller-board{transform:rotateX(5deg) rotateY(-4deg)}
+ .controller-tooltip{display:none}
+}
