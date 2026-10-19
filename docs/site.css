@@ -76,3 +76,19 @@
  .lightbox-stage{grid-template-columns:32px minmax(0,1fr) 32px}
  .lightbox-stage>button{width:32px}
 }
+
+
+/* Four-image previews with a native, keyboard-accessible disclosure. */
+.gallery-more{margin-top:24px;border-top:1px solid var(--line)}
+.gallery-more>summary{display:flex;align-items:center;justify-content:space-between;gap:24px;list-style:none;cursor:pointer;min-height:56px;padding:16px 0;font-size:16px;line-height:24px}
+.gallery-more>summary::-webkit-details-marker{display:none}
+.gallery-more>summary:hover{text-decoration:underline;text-underline-offset:5px}
+.gallery-more .less-label{display:none}
+.gallery-more[open] .more-label{display:none}
+.gallery-more[open] .less-label{display:inline}
+.gallery-chevron{font-size:24px;transition:transform 180ms ease}
+.gallery-more[open] .gallery-chevron{transform:rotate(180deg)}
+.gallery-more>.gallery{padding-top:8px}
+.case-source{margin-bottom:32px}
+@media(max-width:767px){.gallery-more{margin-top:16px}.case-source{margin-bottom:24px}}
+@media print{.gallery-more::details-content{content-visibility:visible}.gallery-more>.gallery{display:grid}}
