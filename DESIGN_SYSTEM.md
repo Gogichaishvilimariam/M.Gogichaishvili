@@ -29,4 +29,4 @@ Frontrow posts belong in Social media; PLATFORM thumbnails require an identified
 - Hero contains only the Graphic Designer heading and controller. No title dot, eyebrow or explanatory copy.
 - Use Bebas Neue for headings and the footer name; Inter for body, links and controls. No additional display fonts.
 - Interface arrows are monochrome inline SVG with currentColor and consistent strokes; never emoji glyphs.
-- Footer name spans the grid. Social links align left below it, and Back to top aligns to the far right.
+- Footer uses the hero black with paper-coloured text. Name uses the section-heading scale; Back to top aligns to the far right. No social links in the footer.

@@ -298,3 +298,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid cur
  @keyframes scroll-arrive{from{opacity:.65;translate:0 8px}to{opacity:1;translate:0 0}}
 }
 @media print{.scroll-progress{display:none}.scroll-revealed{animation:none!important}}
+
+/* A restrained dark footer shares the hero palette and section-heading scale. */
+.site-footer{width:100%;max-width:none;background:#08090c;color:var(--paper);border-top:0;padding-inline:max(var(--gutter),calc((100% - var(--max))/2 + var(--gutter)));padding-block:var(--space-4)}
+.site-footer .footer-name{grid-column:1 / 10;font-size:clamp(40px,4.2vw,64px);line-height:1.08}
+.site-footer .back-to-top{grid-column:10 / -1;color:var(--paper)}
+@media(max-width:767px){
+ .site-footer .footer-name{grid-column:1 / 4;font-size:26px;line-height:32px}
+ .site-footer .back-to-top{grid-column:4;align-self:center}
+}
