@@ -210,3 +210,40 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .profile-bio .press-feature{margin-top:var(--space-4);padding-top:var(--space-3)}
  .profile-bio .press-feature h2{font-size:26px;line-height:32px}
 }
+
+/* Shared rhythm: keep the original spacing scale and consistent section boundaries. */
+main{min-height:0}
+.section{padding-block:var(--space-8)}
+.section-heading{margin-bottom:var(--space-4)}
+.page-intro{padding-bottom:var(--space-4)}
+.project-index{padding-bottom:var(--space-4)}
+.project-header{margin-bottom:var(--space-3)}
+.project-copy{margin-bottom:var(--space-4)}
+.project-facts{margin-bottom:var(--space-4);gap:var(--space-3);padding-block:var(--space-3)}
+.gallery{gap:var(--space-3)}
+.related-work{margin-top:var(--space-4);padding-top:var(--space-3)}
+.profile-header{margin-bottom:var(--space-4)}
+.profile-bio>p:last-child{margin-bottom:0}
+.tools-section{gap:var(--space-6)}
+.contact-layout,.about-layout{padding-top:0}
+.contact-cv,.cv-content{padding-top:0}
+.cv-actions{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-4)}
+.cv-actions .button{margin-top:0}
+.cv-preview{display:block;width:100%;height:800px;border:1px solid var(--line);background:var(--surface)}
+@media(max-width:1023px){.section{padding-block:var(--space-6)}.page-intro{padding-bottom:var(--space-4)}.contact-layout,.about-layout,.contact-cv,.cv-content{padding-top:0}}
+@media(max-width:767px){
+ .section{padding-block:var(--space-4)}
+ .section-heading{margin-bottom:var(--space-3)}
+ .page-intro{padding-bottom:var(--space-3)}
+ .site-header nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-1)}
+ .site-header nav a{font-size:14px;min-height:48px}
+ .project-index{padding-bottom:var(--space-3)}
+ .project-header,.project-copy,.project-facts{margin-bottom:var(--space-3)}
+ .project-facts{gap:var(--space-2);padding-block:var(--space-3)}
+ .related-work{margin-top:var(--space-3);padding-top:var(--space-3)}
+ .profile-header{margin-bottom:var(--space-3)}
+ .tools-section{gap:var(--space-3)}
+ .contact-layout,.about-layout,.contact-cv,.cv-content{padding-top:0}
+ .cv-actions{gap:var(--space-2);margin-bottom:var(--space-3)}
+ .cv-preview{height:560px}
+}
