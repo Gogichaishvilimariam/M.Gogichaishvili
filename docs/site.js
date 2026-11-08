@@ -49,21 +49,47 @@
     });
   }
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // Content is visible without JavaScript. Only animate items initially below the viewport.
+  // Animate on entry without hiding content before JavaScript or observers run.
   if ('IntersectionObserver' in window && !motion.matches) {
+    const targets = [...document.querySelectorAll('.section-heading,.project-header,.services-list li,.gallery figure,.feedback,.profile-header,.contact-cta,.cv-actions')];
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+        if (entry.isIntersecting) {
+          entry.target.classList.add('scroll-revealed');
+          observer.unobserve(entry.target);
+        }
       });
-    }, { threshold: 0.05 });
-    const targets = [...document.querySelectorAll('.section-heading,.work-card,.project-header,.feedback,.contact-cta')];
+    }, { threshold: 0.06 });
     targets.forEach(target => {
-      if (target.getBoundingClientRect().top > window.innerHeight) { target.classList.add('reveal-ready'); observer.observe(target); }
+      if (target.getBoundingClientRect().top > window.innerHeight) observer.observe(target);
     });
-    const revealAll = () => targets.forEach(target => target.classList.add('is-visible'));
-    if (motion.addEventListener) motion.addEventListener('change', event => { if (event.matches) { observer.disconnect(); revealAll(); } });
-    window.addEventListener('beforeprint', revealAll);
+    motion.addEventListener('change', event => {
+      if (event.matches) {
+        observer.disconnect();
+        targets.forEach(target => target.classList.remove('scroll-revealed'));
+      }
+    });
   }
+  // A small progress line shows the reader's position on every page.
+  const progress = document.createElement('div');
+  progress.className = 'scroll-progress';
+  progress.setAttribute('aria-hidden', 'true');
+  document.body.append(progress);
+  let progressQueued = false;
+  const updateProgress = () => {
+    const root = document.documentElement;
+    const distance = root.scrollHeight - root.clientHeight;
+    progress.style.setProperty('--scroll-progress', distance > 0 ? Math.min(1, Math.max(0, window.scrollY / distance)) : 0);
+    progressQueued = false;
+  };
+  const queueProgress = () => {
+    if (!progressQueued) { progressQueued = true; requestAnimationFrame(updateProgress); }
+  };
+  window.addEventListener('scroll', queueProgress, { passive: true });
+  window.addEventListener('resize', queueProgress);
+  window.addEventListener('load', queueProgress);
+  if ('ResizeObserver' in window) new ResizeObserver(queueProgress).observe(document.body);
+  updateProgress();
   document.querySelectorAll('video').forEach(video => {
     const details = video.closest('details');
     if (details) details.addEventListener('toggle', () => { if (!details.open) video.pause(); });
