@@ -143,3 +143,31 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .project-copy{margin-bottom:24px}
  .gallery-more{margin-top:16px}
 }
+
+
+/* Clear project entry points and readable case summaries. */
+.featured-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.featured-grid>*{min-width:0}
+.categories-section{border-top:1px solid var(--line)}
+.project-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:0 0 32px;padding:24px 0;border-block:1px solid var(--line)}
+.project-facts>div{min-width:0}
+.project-facts dt{font-size:14px;font-weight:700;margin-bottom:8px}
+.project-facts dd{margin:0;font-size:16px;line-height:1.6;overflow-wrap:anywhere}
+.related-work{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 24px}
+.related-work .eyebrow{width:100%;margin-bottom:0}
+.profile-actions{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:16px}
+.contact-cv{padding-top:0}
+.contact-cv h2{font-size:26px;line-height:32px;margin-bottom:16px}
+@media(max-width:767px){
+ .featured-grid,.project-facts{grid-template-columns:1fr;gap:24px}
+ .project-facts{padding-block:20px}
+ .project-facts dd{line-height:25px}
+ .profile-actions .text-link,.related-work .text-link{min-height:44px}
+ .contact-cv h2{font-size:20px;line-height:26px}
+ /* Put controls below the image instead of taking its horizontal space. */
+ .lightbox-stage{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) 48px;gap:12px;height:calc(100% - 130px)}
+ .lightbox-stage img{grid-column:1 / -1;grid-row:1;min-height:0}
+ .lightbox-stage>button{grid-row:2;width:48px;height:48px}
+ .lightbox-stage>[data-prev]{grid-column:1;justify-self:end}
+ .lightbox-stage>[data-next]{grid-column:2;justify-self:start}
+}
