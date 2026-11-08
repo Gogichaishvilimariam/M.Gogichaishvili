@@ -30,3 +30,17 @@ button.controller-key{padding:0;border:0;background:transparent;font:inherit}.co
  .controller-board{transform:rotateX(5deg) rotateY(-4deg)}
  .controller-tooltip{display:none}
 }
+
+/* A quiet hero: title and controller share the site's twelve-column grid. */
+.hero--controller{display:block;min-height:0;padding-block:var(--space-12)}
+.hero--controller .hero-layout{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--column-gap);width:min(100%,calc(var(--max) - var(--gutter)*2));margin-inline:auto;align-items:center}
+.hero--controller h1{grid-column:1 / 6;font-size:clamp(72px,8vw,128px);line-height:.95;text-wrap:initial}
+.hero--controller .controller-stage--hero{grid-column:7 / -1;width:100%;max-width:560px;padding:0;justify-self:end}
+@media(max-width:1023px){.hero--controller{padding-block:var(--space-8)}.hero--controller h1{font-size:clamp(56px,8vw,80px)}}
+@media(max-width:767px){
+ .hero--controller{padding-block:var(--space-6)}
+ .hero--controller .hero-layout{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:var(--space-4)}
+ .hero--controller h1{grid-column:1 / -1;font-size:36px;line-height:42px}
+ .hero--controller h1 br{display:none}
+ .hero--controller .controller-stage--hero{grid-column:1 / -1;width:min(100%,280px);justify-self:center}
+}

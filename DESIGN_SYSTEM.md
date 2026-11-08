@@ -23,3 +23,10 @@ Never use text below 14px for essential information. No added letter spacing.
 ## Content
 Remove the redundant homepage Project focus / Study case / motion study section. Preserve original project galleries.
 Frontrow posts belong in Social media; PLATFORM thumbnails require an identified set of the designer's own work before publishing. Do not attribute an entire account without confirmation.
+
+## Layout and icon rules
+- Desktop shared layout: twelve columns with 32px gaps; mobile: four columns with 16px gaps. Preserve existing outer gutters and spacing tokens.
+- Hero contains only the Graphic Designer heading and controller. No title dot, eyebrow or explanatory copy.
+- Use Bebas Neue for headings and the footer name; Inter for body, links and controls. No additional display fonts.
+- Interface arrows are monochrome inline SVG with currentColor and consistent strokes; never emoji glyphs.
+- Footer name spans the grid. Social links align left below it, and Back to top aligns to the far right.
